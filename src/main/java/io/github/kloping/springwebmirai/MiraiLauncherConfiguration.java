@@ -16,6 +16,5 @@ public class MiraiLauncherConfiguration {
     }
 
     private void startLogin() {
-        bots=
     }
 }
