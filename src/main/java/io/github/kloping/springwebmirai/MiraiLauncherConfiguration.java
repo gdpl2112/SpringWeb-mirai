@@ -9,6 +9,7 @@ import net.mamoe.mirai.utils.BotConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 import java.io.File;
 
@@ -16,19 +17,21 @@ import java.io.File;
 public class MiraiLauncherConfiguration {
     private Bots bots = new Bots();
 
-    @Value("${spring.profiles.active}")
-    private String env;
+    private Environment environment;
 
     @Autowired
     ListenerHost listener;
 
-    public MiraiLauncherConfiguration() {
+    public MiraiLauncherConfiguration(Environment environment) {
+        this.environment = environment;
         new Thread(this::startLogin).start();
     }
 
     private void startLogin() {
+        String env = environment.getProperty("spring.active");
+        String name = env.equals("env") ? "botsConfiguration.json" : "test.json";
         File file =
-                new File(this.getClass().getClassLoader().getResource("botsConfiguration.json").getFile());
+                new File(this.getClass().getClassLoader().getResource(name).getFile());
         bots.getBots().add(
                 new Bots.Bot().setId(1111).setPassword("1111")
         );

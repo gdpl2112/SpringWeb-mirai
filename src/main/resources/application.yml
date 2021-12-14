@@ -1,6 +1,6 @@
 server:
   port: 20044
+  address: localhost
 
 spring:
-  profiles:
-    active: env
+  active: env
