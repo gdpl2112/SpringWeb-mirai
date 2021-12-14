@@ -1,0 +1,16 @@
+{
+  "bots": [
+    {
+      "env": null,
+      "id": 111,
+      "password": "111",
+      "protocol": "ANDROID_WATCH"
+    },
+    {
+      "env": null,
+      "id": 222,
+      "password": "2222",
+      "protocol": "ANDROID_WATCH"
+    }
+  ]
+}

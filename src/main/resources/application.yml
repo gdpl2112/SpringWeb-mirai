@@ -1,0 +1,6 @@
+server:
+  port: 20044
+
+spring:
+  profiles:
+    active: env
