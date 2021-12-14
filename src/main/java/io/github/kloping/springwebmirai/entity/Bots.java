@@ -2,41 +2,26 @@ package io.github.kloping.springwebmirai.entity;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import net.mamoe.mirai.utils.BotConfiguration;
 
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-//@Component
-//@ConfigurationProperties(prefix = "bots")
 @Data
 @Accessors(chain = true)
 public class Bots {
     @Data
     @Accessors(chain = true)
     public static class Bot {
-        private String env="env";
-        private long id;
-        private String password;
-        private String protocol;
+        private String env = "env";
+        private long id = -1;
+        private String password = "";
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Bot bot = (Bot) o;
-            return id == bot.id && Objects.equals(env, bot.env) && Objects.equals(password, bot.password) && Objects.equals(protocol, bot.protocol);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(env, id, password, protocol);
-        }
+        private String protocol = BotConfiguration.MiraiProtocol.IPAD.name();
+        private String cacheDir = "./cache/" + id;
+        private String deviceFile = "./devices/" + id + ".json";
+        private String heartbeatStrategy = BotConfiguration.HeartbeatStrategy.STAT_HB.name();
     }
 
     private Set<Bot> bots = new CopyOnWriteArraySet<>();
-
-
 }
