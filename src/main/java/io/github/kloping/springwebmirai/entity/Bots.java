@@ -18,8 +18,8 @@ public class Bots {
         private String password = "";
 
         private String protocol = BotConfiguration.MiraiProtocol.IPAD.name();
-        private String cacheDir = "./cache/" + id;
-        private String deviceFile = "./devices/" + id + ".json";
+        private String cacheDir = "./cache/";
+        private String deviceFile = "./device.json";
         private String heartbeatStrategy = BotConfiguration.HeartbeatStrategy.STAT_HB.name();
     }
 

@@ -1,13 +1,13 @@
 {
-  "bots":[{
-    "env":"env",
-    "id":111,
-    "password":"111",
-    "protocol":"ANDROID_WATCH"
-  },{
-    "env":"env",
-    "id":222,
-    "password":"2222",
-    "protocol":"ANDROID_WATCH"
-  }]
+  "bots": [
+    {
+      "cacheDir": "./cache/",
+      "deviceFile": "./device-930204019.json",
+      "env": "env",
+      "heartbeatStrategy": "STAT_HB",
+      "id": 1111,
+      "password": "1111",
+      "protocol": "ANDROID_PHONE"
+    }
+  ]
 }

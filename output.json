@@ -1,22 +1,19 @@
 {
-  "bots": [
-    {
-      "cacheDir": "./cache/-1",
-      "deviceFile": "./devices/-1.json",
-      "env": "env",
-      "heartbeatStrategy": "STAT_HB",
-      "id": 111,
-      "password": "111",
-      "protocol": "IPAD"
-    },
-    {
-      "cacheDir": "./cache/-1",
-      "deviceFile": "./devices/-1.json",
-      "env": "env",
-      "heartbeatStrategy": "STAT_HB",
-      "id": 222,
-      "password": "2222",
-      "protocol": "IPAD"
-    }
-  ]
+	"bots":[{
+		"cacheDir":"./cache/",
+		"deviceFile":"./device.json",
+		"env":"env",
+		"heartbeatStrategy":"STAT_HB",
+		"id":111,
+		"password":"111",
+		"protocol":"IPAD"
+	},{
+		"cacheDir":"./cache/",
+		"deviceFile":"./device.json",
+		"env":"env",
+		"heartbeatStrategy":"STAT_HB",
+		"id":222,
+		"password":"2222",
+		"protocol":"IPAD"
+	}]
 }
