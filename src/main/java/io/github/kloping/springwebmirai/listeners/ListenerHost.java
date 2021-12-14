@@ -25,11 +25,5 @@ public class ListenerHost extends SimpleListenerHost {
 
     @EventHandler
     public void onGroupMessage(GroupMessageEvent event) {
-        try {
-            String arg = event.getMessage().serializeToMiraiCode();
-            Object o = restTemplate.getForObject("http://localhost:20044/test?arg=" + arg, String.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

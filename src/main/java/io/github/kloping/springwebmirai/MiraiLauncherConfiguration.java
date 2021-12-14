@@ -29,7 +29,11 @@ public class MiraiLauncherConfiguration {
     private void startLogin() {
         File file =
                 new File(this.getClass().getClassLoader().getResource("botsConfiguration.json").getFile());
+        bots.getBots().add(
+                new Bots.Bot().setId(1111).setPassword("1111")
+        );
         bots = FileInitializeValue.getValue(file.getAbsolutePath(), bots);
+
         bots.getBots().forEach(e -> {
             if (!e.getEnv().equals(env)) return;
             BotConfiguration configuration = BotConfiguration.getDefault();
