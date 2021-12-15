@@ -1,20 +1,19 @@
 package io.github.kloping.springwebmirai;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import io.github.kloping.springwebmirai.entity.EventResponse;
-import io.github.kloping.springwebmirai.entity.GroupEvent;
+import io.github.kloping.initialize.FileInitializeValue;
+import io.github.kloping.springwebmirai.entity.Bots;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestTemplate;
 
-@SpringBootApplication
-@RestController
-public class SpringWebMiraiApplication {
+import java.io.File;
 
+@SpringBootApplication
+public class SpringWebMiraiApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringWebMiraiApplication.class, args);
     }
@@ -24,16 +23,22 @@ public class SpringWebMiraiApplication {
         return new RestTemplate();
     }
 
-    @GetMapping(value = {"/test", "/测试"})
-    public EventResponse get(String w) {
-        GroupEvent arg = JSONObject.parseObject(w, GroupEvent.class);
-        EventResponse response = new EventResponse();
-        response.setResponseType("text");
-        response.setBotId(arg.getBotId());
-        response.setSerId(arg.getSerId());
-        response.setFrom(arg.getFrom());
-        response.setBody("测试成功");
-        response.setSender(arg.getSender());
-        return response;
+    @Bean
+    public String botConfName(Environment env) {
+        return env.equals("env") ? "botsConfiguration.json" : "test.json";
+    }
+
+    @Bean
+    public Bots bots(
+            @Autowired
+            @Qualifier("botConfName") String name) {
+        File file =
+                new File(this.getClass().getClassLoader().getResource(name).getFile());
+        Bots bots = new Bots();
+        bots.getBots().add(
+                new Bots.Bot().setId(1111).setPassword("1111")
+        );
+        bots = FileInitializeValue.getValue(file.getAbsolutePath(), bots);
+        return bots;
     }
 }

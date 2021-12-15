@@ -15,34 +15,46 @@
     <description>SpringWeb-mirai</description>
     <properties>
         <java.version>11</java.version>
+        <mirai.version>LATEST</mirai.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!--自定义security页面-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
         <dependency>
             <groupId>net.mamoe</groupId>
             <artifactId>mirai-core-all</artifactId>
-            <version>LATEST</version>
+            <version>${mirai.version}</version>
         </dependency>
         <dependency>
             <groupId>net.mamoe</groupId>
             <artifactId>mirai-core-jvm</artifactId>
-            <version>LATEST</version>
+            <version>${mirai.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>com.esotericsoftware.yamlbeans</groupId>
-            <artifactId>yamlbeans</artifactId>
-            <version>1.15</version>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-console</artifactId>
+            <version>${mirai.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-console-terminal</artifactId>
+            <version>${mirai.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -57,10 +69,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
         </plugins>
     </build>
 

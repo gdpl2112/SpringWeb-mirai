@@ -36,3 +36,4 @@ cache/
 plugin/
 device/
 *.json
+*/config

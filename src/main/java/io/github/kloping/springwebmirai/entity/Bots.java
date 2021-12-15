@@ -24,4 +24,8 @@ public class Bots {
     }
 
     private Set<Bot> bots = new CopyOnWriteArraySet<>();
+
+    public void apply() {
+
+    }
 }

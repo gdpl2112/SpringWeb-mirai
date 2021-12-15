@@ -1,42 +1,36 @@
 package io.github.kloping.springwebmirai;
 
-import io.github.kloping.initialize.FileInitializeValue;
 import io.github.kloping.springwebmirai.entity.Bots;
 import io.github.kloping.springwebmirai.listeners.ListenerHost;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
+import net.mamoe.mirai.console.terminal.MiraiConsoleImplementationTerminal;
+import net.mamoe.mirai.console.terminal.MiraiConsoleTerminalLoader;
 import net.mamoe.mirai.utils.BotConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.nio.file.Paths;
 
-@Configuration
+@Service
 public class MiraiLauncherConfiguration {
-    private Bots bots = new Bots();
+
+    private Bots bots;
 
     private Environment environment;
 
-    @Autowired
-    ListenerHost listener;
+    private ListenerHost listener;
 
-    public MiraiLauncherConfiguration(Environment environment) {
+    public MiraiLauncherConfiguration(Bots bots, Environment environment, ListenerHost listener) {
+        this.bots = bots;
         this.environment = environment;
+        this.listener = listener;
         new Thread(this::startLogin).start();
     }
 
     private void startLogin() {
         String env = environment.getProperty("spring.active");
-        String name = env.equals("env") ? "botsConfiguration.json" : "test.json";
-        File file =
-                new File(this.getClass().getClassLoader().getResource(name).getFile());
-        bots.getBots().add(
-                new Bots.Bot().setId(1111).setPassword("1111")
-        );
-        bots = FileInitializeValue.getValue(file.getAbsolutePath(), bots);
-
         bots.getBots().forEach(e -> {
             if (!e.getEnv().equals(env)) return;
             BotConfiguration configuration = BotConfiguration.getDefault();
@@ -48,5 +42,8 @@ public class MiraiLauncherConfiguration {
             bot.login();
             bot.getEventChannel().registerListenerHost(listener);
         });
+        MiraiConsoleTerminalLoader.INSTANCE.startAsDaemon(
+                new MiraiConsoleImplementationTerminal(Paths.get("./botWorkDir/"))
+        );
     }
 }

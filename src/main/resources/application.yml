@@ -3,4 +3,8 @@ server:
   address: localhost
 
 spring:
-  active: env
+  active: test
+#  security:
+#    user:
+#      name: admin
+#      password: password
