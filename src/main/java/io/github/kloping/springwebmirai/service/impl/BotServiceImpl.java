@@ -19,13 +19,11 @@ public class BotServiceImpl implements IBotService {
             BotList.BotInfo botInfo = new BotList.BotInfo()
                     .setSrc(getSrc(q)).setId(q);
             try {
-
                 Bot bot = Bot.getInstanceOrNull(q);
                 botInfo.setNickname(bot.getNick())
                         .setLoginTime(MiraiLauncherConfiguration.logins.get(q))
                         .setOnline(bot.isOnline() ? 1 : 0);
             } catch (Exception e) {
-
             }
             botList.getList().add(botInfo);
         }

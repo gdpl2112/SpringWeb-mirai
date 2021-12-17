@@ -18,7 +18,7 @@
     </a>
 
     <div :class="getClass(e.online)" v-for="e in data0.list">
-        <div  class="media">
+        <div class="media">
             <img style="height: 50px; width: 50px;" :src="e.src" class="mr-3" alt="QQ头像">
             <a :href="e.online===1?('/manager/detailInfo.html?id='+e.id):'#'" class="media-body">
                 <h5 class="mt-0" v-text="e.nickname"></h5>
@@ -31,6 +31,7 @@
         </div>
     </div>
 </div>
+<script src="../js/utils.js"></script>
 <script>
     let vmn = new Vue({
         el: "#m-main",
@@ -67,34 +68,6 @@
         }
     });
 
-    function jsDateFormatter(dateInput) {
-        let year = dateInput.getFullYear();
-        let month = dateInput.getMonth() + 1;
-        let theDate = dateInput.getDate();
-
-        let hour = dateInput.getHours();
-        let minute = dateInput.getMinutes();
-        let second = dateInput.getSeconds();
-
-        if (month < 10) {
-            month = '0' + month;
-        }
-
-        if (theDate < 10) {
-            theDate = '0' + theDate;
-        }
-
-        if (hour < 10) {
-            hour = '0' + hour;
-        }
-        if (minute < 10) {
-            minute = '0' + minute;
-        }
-        if (second < 10) {
-            second = '0' + second;
-        }
-        return year + "-" + month + "-" + theDate + " " + hour + ":" + minute + ":" + second;
-    }
 </script>
 </body>
 </html>

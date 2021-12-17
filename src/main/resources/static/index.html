@@ -2,9 +2,86 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>首页</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
+<div class="row">
+    <div class="col-sm-6" id="bot-main">
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">存在的机器人</a>
+            <a href="#" v-for="e in data.list" :class="getClass(e.online)">
+                <div class="media">
+                    <img style="height: 50px; width: 50px;" :src="e.src" class="mr-3" alt="QQ头像">
+                    <div class="media-body">
+                        <h5 class="mt-0" v-text="e.nickname"></h5>
+                        <p v-text="e.id+'的登录时间:'+getTime(e.loginTime)"></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-sm-6" id="plugin-main">
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">已安装插件</a>
+            <a href="#" class="list-group-item" v-for="e in datas">
+                <div class="media">
+                    <div class="media-body">
+                        <h5 class="mt-0" v-text="e.name"></h5>
+                        <p v-text="e.author"></p>
+                        <p v-text="e.desc"></p>
+                        <p v-text="e.version"></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<script src="../js/utils.js"></script>
+<script>
+    let i1 = location.href.indexOf("=")
+    let id = location.href.substr(i1 + 1);
+    let vm1 = new Vue({
+        el: "#bot-main",
+        created: function () {
+            axios.get("/getBots").then(function (response) {
+                vm1.data = response.data;
+            }).catch(function (err) {
+                alert(err);
+            })
+        }, data: {
+            data: {}
+        }, methods: {
+            getClass: function (level) {
+                let cs = 'list-group-item';
+                if (level === 1) {
+                    cs = cs + ' list-group-item-success';
+                } else if (level === 2) {
+                    cs = cs + ' list-group-item-info'
+                }
+                return cs;
+            }, getTime: function (t) {
+                return jsDateFormatter(new Date(t))
+            }
+        }
+    });
 
+    let vm2 = new Vue({
+        el: "#plugin-main",
+        created: function () {
+            axios.get("/plugins").then(function (response) {
+                vm2.datas = response.data;
+            }).catch(function (err) {
+                alert(err);
+            })
+        }, data: {
+            datas: []
+        }, methods: {}
+    });
+</script>
 </body>
 </html>

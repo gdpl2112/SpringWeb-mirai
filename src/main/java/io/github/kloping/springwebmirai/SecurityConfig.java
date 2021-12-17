@@ -20,6 +20,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         NotNeedAuthPages.add("/js/*");
         NotNeedAuthPages.add("/css/*");
         NotNeedAuthPages.add("/index");
+        NotNeedAuthPages.add("/getBots");
+        NotNeedAuthPages.add("/plugins");
     }
 
     @Override
