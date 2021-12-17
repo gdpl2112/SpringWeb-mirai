@@ -52,15 +52,13 @@ public class MiraiLauncherConfiguration {
         );
     }
 
-    public void relogin(long id) {
+    public void reLogin(long id) {
         String env = environment.getProperty("spring.active");
         bots.getBots().forEach(e -> {
             if (e.getId() != id) return;
             if (!e.getEnv().equals(env)) return;
-            try {
+            if (Bot.getInstanceOrNull(e.getId()) != null)
                 Bot.getInstance(e.getId()).close();
-            } catch (Exception ex) {
-            }
             BotConfiguration configuration = BotConfiguration.getDefault();
             configuration.setProtocol(BotConfiguration.MiraiProtocol.valueOf(e.getProtocol()));
             configuration.setHeartbeatStrategy(BotConfiguration.HeartbeatStrategy.valueOf(e.getHeartbeatStrategy()));

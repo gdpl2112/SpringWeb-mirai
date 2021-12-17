@@ -1,10 +1,6 @@
 server:
-  port: 20044
+  port: 20046
   address: localhost
 
 spring:
   active: test
-#  security:
-#    user:
-#      name: admin
-#      password: password

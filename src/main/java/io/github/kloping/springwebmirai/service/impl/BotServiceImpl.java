@@ -85,7 +85,7 @@ public class BotServiceImpl implements IBotService {
     public BotList online(long id) {
         try {
             if (Bot.getInstanceOrNull(id) == null)
-                configuration.relogin(id);
+                configuration.reLogin(id);
         } catch (Exception e) {
             e.printStackTrace();
         }
