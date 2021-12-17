@@ -26,7 +26,7 @@ public class MiraiLauncherConfiguration {
         this.bots = bots;
         this.environment = environment;
         this.listener = listener;
-        new Thread(this::startLogin).start();
+//        new Thread(this::startLogin).start();
     }
 
     private void startLogin() {

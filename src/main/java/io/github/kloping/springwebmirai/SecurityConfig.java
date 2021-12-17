@@ -29,6 +29,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login.html").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/index").permitAll()
+                .antMatchers("/js/*").permitAll()
+                .antMatchers("/css/*").permitAll()
+                .antMatchers("/fail").permitAll()
+                .antMatchers("/success").permitAll()
                 // anyRequest() 所有请求   authenticated() 必须被认证
                 .mvcMatchers("/manager").authenticated()
                 .anyRequest().authenticated();
