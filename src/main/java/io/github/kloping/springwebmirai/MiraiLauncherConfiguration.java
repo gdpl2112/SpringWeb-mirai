@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 @Service
 public class MiraiLauncherConfiguration {
@@ -26,8 +30,10 @@ public class MiraiLauncherConfiguration {
         this.bots = bots;
         this.environment = environment;
         this.listener = listener;
-//        new Thread(this::startLogin).start();
+        new Thread(this::startLogin).start();
     }
+
+    public static final Map<Long, Long> logins = new ConcurrentHashMap<>();
 
     private void startLogin() {
         String env = environment.getProperty("spring.active");
@@ -40,6 +46,7 @@ public class MiraiLauncherConfiguration {
             configuration.fileBasedDeviceInfo(e.getDeviceFile());
             Bot bot = BotFactory.INSTANCE.newBot(e.getId(), e.getPassword(), configuration);
             bot.login();
+            logins.put(e.getId(), System.currentTimeMillis());
             bot.getEventChannel().registerListenerHost(listener);
         });
         MiraiConsoleTerminalLoader.INSTANCE.startAsDaemon(

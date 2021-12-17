@@ -33,19 +33,6 @@ $("#userInput").blur(function () {
     tips.css("display", "none")
 })
 
-function test() {
-    if (k1 && k2) {
-        subInput.click(function () {
-            let data = $("#login-form")
-            axios.post("/login", data).then(function (response) {
-                location.href = response.data
-            }).catch(function (err) {
-                alert(err);
-            })
-        })
-    }
-}
-
 $("#passwordInput").blur(function () {
     let str = $("#passwordInput").val()
     let tips = $("#passTips");

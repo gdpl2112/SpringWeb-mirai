@@ -7,12 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UseController {
     @RequestMapping("/")
     public String showLogin() {
-        return "/login";
-    }
-
-    @RequestMapping("/success")
-    public String success() {
-        return "<p>ok</p>";
+        return "redirect:/login.html";
     }
 
     @RequestMapping("/fail")

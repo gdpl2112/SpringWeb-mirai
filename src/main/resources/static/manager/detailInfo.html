@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<center>
+    <img id="q-src" style="height: 80px; width: 80px;" alt="QQ头像"/>
+    <div class="media">
+        <div class="media-body">
+            <h5 class="mt-0" id="q-nick"></h5>
+            <p id="q-tips"></p>
+        </div>
+    </div>
+</center>
+<div id="dInfo-main" class="row">
+    <div class="col-sm-6">
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">机器人所处群聊</a>
+            <a href="#" v-for="(g, key) in data.groups"
+               :class="getClass(g.level)">
+                <div class="media">
+                    <img style="height: 50px; width: 50px;" :src="g.src" class="mr-3" alt="QQ头像">
+                    <div class="media-body">
+                        <h5 class="mt-0" v-text="g.nickname+'('+key"></h5>
+                        <p v-text="g.state==0?'正常发言':'剩余被禁言时间:'+g.state"></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">机器人好友列表</a>
+            <a href="#" class="list-group-item" v-for="f in data.friends">
+                <div class="media">
+                    <img style="height: 50px; width: 50px;" :src="f.src" class="mr-3" alt="QQ头像">
+                    <div class="media-body">
+                        <h5 class="mt-0" v-text="f.nickname"></h5>
+                        <p v-text="f.id"></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<script>
+    let i1 = location.href.indexOf("=")
+    let id = location.href.substr(i1 + 1);
+    let vm1 = new Vue({
+        el: "#dInfo-main",
+        created: function () {
+            axios.post("/manager/detail?id=" + id,).then(function (response) {
+                vm1.data = response.data;
+                vm1.init_top();
+            }).catch(function (err) {
+                alert(err);
+            })
+        }, data: {
+            data: []
+        }, methods: {
+            init_top: function () {
+                $("#q-src").attr("src", vm1.data.src)
+                $("#q-nick").html(vm1.data.nickname)
+                $("#q-tips").html(vm1.data.id + "的登录时间:" + vm1.getTime(vm1.data.loginTime))
+            }, getClass: function (level) {
+                let cs = 'list-group-item';
+                if (level === 1) {
+                    cs = cs + ' list-group-item-success';
+                } else if (level === 2) {
+                    cs = cs + ' list-group-item-info'
+                }
+                return cs;
+            }, getTime: function (t) {
+                return jsDateFormatter(new Date(t))
+            }
+        }
+    });
+
+    function jsDateFormatter(dateInput) {
+        let year = dateInput.getFullYear();
+        let month = dateInput.getMonth() + 1;
+        let theDate = dateInput.getDate();
+
+        let hour = dateInput.getHours();
+        let minute = dateInput.getMinutes();
+        let second = dateInput.getSeconds();
+
+        if (month < 10) {
+            month = '0' + month;
+        }
+
+        if (theDate < 10) {
+            theDate = '0' + theDate;
+        }
+
+        if (hour < 10) {
+            hour = '0' + hour;
+        }
+        if (minute < 10) {
+            minute = '0' + minute;
+        }
+        if (second < 10) {
+            second = '0' + second;
+        }
+        return year + "-" + month + "-" + theDate + " " + hour + ":" + minute + ":" + second;
+    }
+</script>
+</body>
+</html>

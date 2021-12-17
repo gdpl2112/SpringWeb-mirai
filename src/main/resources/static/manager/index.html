@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bot Manager Page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+</head>
+<body>
+<center><h1>Bot Manager Page</h1></center>
+<div id="m-main" class="list-group">
+    <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+        所有机器人
+    </a>
+
+    <a v-for="e in data0.list" :href="'/manager/detailInfo.html?id='+e.id" class="list-group-item list-group-item-action">
+        <div class="media">
+            <img style="height: 50px; width: 50px;" :src="e.src" class="mr-3" alt="QQ头像">
+            <div class="media-body">
+                <h5 class="mt-0" v-text="e.nickname"></h5>
+                <p v-text="e.id+'的登录时间:'+getTime(e.loginTime)"></p>
+            </div>
+        </div>
+    </a>
+</div>
+<script>
+    let vmn = new Vue({
+        el: "#m-main",
+        created: function () {
+            axios.post("/manager/getBots").then(function (response) {
+                vmn.data0 = response.data
+            }).catch(function (err) {
+                alert(err);
+            })
+        }, data: {
+            data0: []
+        }, methods: {
+            getTime: function (t) {
+                return jsDateFormatter(new Date(t))
+            }
+        }
+    });
+
+    function jsDateFormatter(dateInput) {
+        let year = dateInput.getFullYear();
+        let month = dateInput.getMonth() + 1;
+        let theDate = dateInput.getDate();
+
+        let hour = dateInput.getHours();
+        let minute = dateInput.getMinutes();
+        let second = dateInput.getSeconds();
+
+        if (month < 10) {
+            month = '0' + month;
+        }
+
+        if (theDate < 10) {
+            theDate = '0' + theDate;
+        }
+
+        if (hour < 10) {
+            hour = '0' + hour;
+        }
+        if (minute < 10) {
+            minute = '0' + minute;
+        }
+        if (second < 10) {
+            second = '0' + second;
+        }
+        return year + "-" + month + "-" + theDate + " " + hour + ":" + minute + ":" + second;
+    }
+</script>
+</body>
+</html>
