@@ -52,6 +52,7 @@ public class BotServiceImpl implements IBotService {
                             .setState(group.getBotMuteRemaining())
             );
         }
+        botDetail.sort();
         return botDetail;
     }
 

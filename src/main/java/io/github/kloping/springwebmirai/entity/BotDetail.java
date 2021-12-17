@@ -3,10 +3,7 @@ package io.github.kloping.springwebmirai.entity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.*;
 
 @Data
 @Accessors(chain = true)
@@ -25,8 +22,22 @@ public class BotDetail {
     private String src;
     private String nickname;
     private Long loginTime = -1L;
-    private Map<Long, GroupInfo> groups = new ConcurrentHashMap<>();
-    private Set<BotList.BotInfo> friends = new CopyOnWriteArraySet<>();
+    private Map<Long, GroupInfo> groups = new LinkedHashMap<>();
+    private Set<BotList.BotInfo> friends = new LinkedHashSet<>();
+
+    public void sort() {
+        List<Map.Entry<Long, GroupInfo>> list = new LinkedList<>(groups.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<Long, GroupInfo>>() {
+            @Override
+            public int compare(Map.Entry<Long, GroupInfo> o1, Map.Entry<Long, GroupInfo> o2) {
+                return o2.getValue().getLevel() - o1.getValue().getLevel();
+            }
+        });
+        groups.clear();
+        for (Map.Entry<Long, GroupInfo> kv : list) {
+            groups.put(kv.getKey(),kv.getValue());
+        }
+    }
 }
 
 
