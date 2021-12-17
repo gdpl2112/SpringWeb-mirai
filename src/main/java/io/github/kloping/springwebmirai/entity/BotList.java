@@ -13,11 +13,11 @@ public class BotList {
     @Accessors(chain = true)
     public static class BotInfo {
         private String src;
-        private String nickname;
+        private String nickname = "未知";
         private Long loginTime = -1L;
         private Long id;
+        private Integer online = 0;
     }
 
     private Set<BotInfo> list = new CopyOnWriteArraySet<>();
-
 }

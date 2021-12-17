@@ -10,14 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@PreAuthorize("hasRole('admin')")
 @RequestMapping("/manager")
 public class BotController {
     @Autowired
     IBotService botService;
 
-
     @PostMapping("/getBots")
-    @PreAuthorize("hasRole('admin')")
     public BotList m1() {
         return botService.getBotList();
     }
@@ -25,5 +24,15 @@ public class BotController {
     @PostMapping("/detail")
     public BotDetail m2(Long id) {
         return botService.getBotDetail(id);
+    }
+
+    @PostMapping("/offline")
+    public BotList m3(long id) {
+        return botService.offline(id);
+    }
+
+    @PostMapping("/online")
+    public BotList m4(long id) {
+        return botService.online(id);
     }
 }

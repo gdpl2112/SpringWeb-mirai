@@ -13,9 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 @Service
 public class MiraiLauncherConfiguration {
@@ -52,5 +50,27 @@ public class MiraiLauncherConfiguration {
         MiraiConsoleTerminalLoader.INSTANCE.startAsDaemon(
                 new MiraiConsoleImplementationTerminal(Paths.get("./botWorkDir/"))
         );
+    }
+
+    public void relogin(long id) {
+        String env = environment.getProperty("spring.active");
+        bots.getBots().forEach(e -> {
+            if (e.getId() != id) return;
+            if (!e.getEnv().equals(env)) return;
+            try {
+                Bot.getInstance(e.getId()).close();
+            } catch (Exception ex) {
+            }
+            BotConfiguration configuration = BotConfiguration.getDefault();
+            configuration.setProtocol(BotConfiguration.MiraiProtocol.valueOf(e.getProtocol()));
+            configuration.setHeartbeatStrategy(BotConfiguration.HeartbeatStrategy.valueOf(e.getHeartbeatStrategy()));
+            configuration.fileBasedDeviceInfo(e.getDeviceFile());
+            configuration.setCacheDir(new File(e.getCacheDir()));
+            Bot bot = BotFactory.INSTANCE.newBot(e.getId(), e.getPassword(), configuration);
+            bot.login();
+            logins.put(e.getId(), System.currentTimeMillis());
+            bot.getEventChannel().registerListenerHost(listener);
+        });
+
     }
 }

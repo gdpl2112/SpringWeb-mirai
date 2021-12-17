@@ -17,15 +17,19 @@
         所有机器人
     </a>
 
-    <a v-for="e in data0.list" :href="'/manager/detailInfo.html?id='+e.id" class="list-group-item list-group-item-action">
-        <div class="media">
+    <div :class="getClass(e.online)" v-for="e in data0.list">
+        <div  class="media">
             <img style="height: 50px; width: 50px;" :src="e.src" class="mr-3" alt="QQ头像">
-            <div class="media-body">
+            <a :href="e.online===1?('/manager/detailInfo.html?id='+e.id):'#'" class="media-body">
                 <h5 class="mt-0" v-text="e.nickname"></h5>
                 <p v-text="e.id+'的登录时间:'+getTime(e.loginTime)"></p>
+            </a>
+            <div class="ml-3">
+                <button type="button" class="btn btn-secondary" @click="offline(e.id)">下线该QQ</button>
+                <button type="button" class="btn btn-success" @click="online(e.id)">上线该QQ</button>
             </div>
         </div>
-    </a>
+    </div>
 </div>
 <script>
     let vmn = new Vue({
@@ -41,6 +45,24 @@
         }, methods: {
             getTime: function (t) {
                 return jsDateFormatter(new Date(t))
+            }, getClass: function (online) {
+                if (online === 1) {
+                    return "list-group-item list-group-item-action list-group-item-success"
+                } else {
+                    return "list-group-item list-group-item-action list-group-item-secondary"
+                }
+            }, offline: function (id) {
+                axios.post("/manager/offline?id=" + id).then(function (response) {
+                    vmn.data0 = response.data
+                }).catch(function (err) {
+                    alert(err);
+                })
+            }, online: function (id) {
+                axios.post("/manager/online?id=" + id).then(function (response) {
+                    vmn.data0 = response.data
+                }).catch(function (err) {
+                    alert(err);
+                })
             }
         }
     });

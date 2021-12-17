@@ -7,6 +7,7 @@ import io.github.kloping.springwebmirai.service.IBotService;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,11 +16,17 @@ public class BotServiceImpl implements IBotService {
     public BotList getBotList() {
         BotList botList = new BotList();
         for (long q : MiraiLauncherConfiguration.logins.keySet()) {
-            Bot bot = Bot.getInstance(q);
             BotList.BotInfo botInfo = new BotList.BotInfo()
-                    .setId(q).setNickname(bot.getNick())
-                    .setSrc(getSrc(q))
-                    .setLoginTime(MiraiLauncherConfiguration.logins.get(q));
+                    .setSrc(getSrc(q)).setId(q);
+            try {
+
+                Bot bot = Bot.getInstanceOrNull(q);
+                botInfo.setNickname(bot.getNick())
+                        .setLoginTime(MiraiLauncherConfiguration.logins.get(q))
+                        .setOnline(bot.isOnline() ? 1 : 0);
+            } catch (Exception e) {
+
+            }
             botList.getList().add(botInfo);
         }
         return botList;
@@ -27,10 +34,10 @@ public class BotServiceImpl implements IBotService {
 
     @Override
     public BotDetail getBotDetail(Long id) {
-        Bot bot = Bot.getInstance(id);
+        Bot bot = Bot.getInstanceOrNull(id);
         BotDetail botDetail = new BotDetail();
         botDetail.setId(id);
-        botDetail.setSrc(getSrc(id));
+        botDetail.setSrc(bot.getAvatarUrl());
         botDetail.setNickname(bot.getNick());
         botDetail.setLoginTime(MiraiLauncherConfiguration.logins.get(id));
         for (Friend friend : bot.getFriends()) {
@@ -38,7 +45,7 @@ public class BotServiceImpl implements IBotService {
                     new BotList.BotInfo()
                             .setNickname(friend.getNick())
                             .setId(friend.getId())
-                            .setSrc(getSrc(friend.getId()))
+                            .setSrc(friend.getAvatarUrl())
             );
         }
         for (Group group : bot.getGroups()) {
@@ -58,5 +65,30 @@ public class BotServiceImpl implements IBotService {
 
     public static String getSrc(long q) {
         return String.format("https://q1.qlogo.cn/g?b=qq&nk=%s&s=640", q);
+    }
+
+    @Override
+    public BotList offline(long id) {
+        try {
+            if (Bot.getInstanceOrNull(id) != null)
+                Bot.getInstance(id).close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return getBotList();
+    }
+
+    @Autowired
+    MiraiLauncherConfiguration configuration;
+
+    @Override
+    public BotList online(long id) {
+        try {
+            if (Bot.getInstanceOrNull(id) == null)
+                configuration.relogin(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return getBotList();
     }
 }
