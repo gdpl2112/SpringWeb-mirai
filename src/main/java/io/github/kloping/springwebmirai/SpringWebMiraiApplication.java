@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import java.io.File;
 
@@ -40,5 +41,15 @@ public class SpringWebMiraiApplication {
         );
         bots = FileInitializeValue.getValue(file.getAbsolutePath(), bots);
         return bots;
+    }
+    /**
+     * 这个bean会自动注册使用了@ServerEndpoint注解声明的对象
+     * 没有的话会报404
+     *
+     * @return
+     */
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter() {
+        return new ServerEndpointExporter();
     }
 }

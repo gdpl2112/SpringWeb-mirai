@@ -1,5 +1,6 @@
 package io.github.kloping.springwebmirai;
 
+import io.github.kloping.io.ReadIOUtils;
 import io.github.kloping.springwebmirai.entity.Bots;
 import io.github.kloping.springwebmirai.listeners.ListenerHost;
 import net.mamoe.mirai.Bot;
@@ -11,9 +12,12 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static io.github.kloping.springwebmirai.service.TerminalConfig.recs;
 
 @Service
 public class MiraiLauncherConfiguration {
@@ -47,9 +51,39 @@ public class MiraiLauncherConfiguration {
             logins.put(e.getId(), System.currentTimeMillis());
             bot.getEventChannel().registerListenerHost(listener);
         });
+        MiraiConsoleImplementationTerminal terminal = null;
         MiraiConsoleTerminalLoader.INSTANCE.startAsDaemon(
-                new MiraiConsoleImplementationTerminal(Paths.get("./botWorkDir/"))
+                terminal = new MiraiConsoleImplementationTerminal(Paths.get("./botWorkDir/"))
         );
+
+        new Thread(() -> {
+            ReadIOUtils.ReadOutputStream ros = ReadIOUtils.connectOs(System.out);
+            System.setOut(new PrintStream(ros.getOs()));
+            String line = null;
+            while ((line = ros.readLine()) != null) {
+                if (recs.isEmpty()) continue;
+                else {
+                    String finalLine = line;
+                    recs.forEach(e -> {
+                        e.onMessage(finalLine,0);
+                    });
+                }
+            }
+        }).start();
+        new Thread(() -> {
+            ReadIOUtils.ReadOutputStream ros = ReadIOUtils.connectOs(System.err);
+            System.setErr(new PrintStream(ros.getOs()));
+            String line = null;
+            while ((line = ros.readLine()) != null) {
+                if (recs.isEmpty()) continue;
+                else {
+                    String finalLine = line;
+                    recs.forEach(e -> {
+                        e.onMessage(finalLine,-1);
+                    });
+                }
+            }
+        }).start();
     }
 
     public void reLogin(long id) {
@@ -69,6 +103,5 @@ public class MiraiLauncherConfiguration {
             logins.put(e.getId(), System.currentTimeMillis());
             bot.getEventChannel().registerListenerHost(listener);
         });
-
     }
 }

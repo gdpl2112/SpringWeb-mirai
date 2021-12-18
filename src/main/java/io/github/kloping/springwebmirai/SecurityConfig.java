@@ -22,6 +22,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         NotNeedAuthPages.add("/index");
         NotNeedAuthPages.add("/getBots");
         NotNeedAuthPages.add("/plugins");
+        NotNeedAuthPages.add("/manager/terminal.html");
+        NotNeedAuthPages.add("/server_terminal");
     }
 
     @Override
