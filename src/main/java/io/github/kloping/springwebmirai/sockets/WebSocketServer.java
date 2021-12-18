@@ -22,12 +22,9 @@ public class WebSocketServer {
         System.out.println("====================");
     }
 
-    // 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static int onlineCount = 0;
-
     private static Map<Session, CopyOnWriteArraySet<WebSocketServer>> socketMap = new HashMap();
     private static Map<Session, TerminalConfig.Receiver> receiverMap = new ConcurrentHashMap<>();
-    // 与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
 
     @OnOpen
@@ -55,6 +52,7 @@ public class WebSocketServer {
         };
         receiverMap.put(session, receiver);
         recs.add(receiver);
+
     }
 
     @OnClose
@@ -69,23 +67,15 @@ public class WebSocketServer {
 
     }
 
-    /**
-     * @param session
-     * @param error
-     */
     @OnError
     public void onError(Session session, Throwable error) {
         log.error("发生错误", error);
         error.printStackTrace();
     }
 
-    /**
-     * 实现服务器主动推送
-     */
     public void sendMessage(Object obj) {
         try {
             this.session.getBasicRemote().sendText(obj.toString());
-//            log.info("消息发送成功：{}", message);
         } catch (Exception e) {
             log.error("消息发送失败", e);
         }

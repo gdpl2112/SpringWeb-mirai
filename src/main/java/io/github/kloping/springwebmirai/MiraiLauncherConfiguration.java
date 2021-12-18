@@ -55,7 +55,6 @@ public class MiraiLauncherConfiguration {
         MiraiConsoleTerminalLoader.INSTANCE.startAsDaemon(
                 terminal = new MiraiConsoleImplementationTerminal(Paths.get("./botWorkDir/"))
         );
-
         new Thread(() -> {
             ReadIOUtils.ReadOutputStream ros = ReadIOUtils.connectOs(System.out);
             System.setOut(new PrintStream(ros.getOs()));
@@ -65,7 +64,7 @@ public class MiraiLauncherConfiguration {
                 else {
                     String finalLine = line;
                     recs.forEach(e -> {
-                        e.onMessage(finalLine,0);
+                        e.onMessage(finalLine, 0);
                     });
                 }
             }
@@ -79,7 +78,7 @@ public class MiraiLauncherConfiguration {
                 else {
                     String finalLine = line;
                     recs.forEach(e -> {
-                        e.onMessage(finalLine,-1);
+                        e.onMessage(finalLine, -1);
                     });
                 }
             }
