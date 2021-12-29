@@ -11,7 +11,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
-import javax.websocket.server.ServerEndpoint;
 import java.io.File;
 
 /**
@@ -48,7 +47,7 @@ public class SpringWebMiraiApplication {
     }
 
     /**
-     * This bean will automatically register objects declared with the {@link ServerEndpoint} annotation
+     * This bean will automatically register objects declared with the {@link javax.websocket.server.ServerEndpoint} annotation
      * as 404 if they are not
      *
      * @return

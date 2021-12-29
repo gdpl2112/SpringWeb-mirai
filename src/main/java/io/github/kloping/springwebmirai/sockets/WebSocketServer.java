@@ -14,6 +14,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import static io.github.kloping.springwebmirai.service.TerminalConfig.RECEIVERS;
 
+/**
+ * @author github-kloping
+ */
 @ServerEndpoint(value = "/server_terminal")
 @Component
 @Slf4j
