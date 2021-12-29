@@ -6,6 +6,9 @@ import lombok.experimental.Accessors;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+/**
+ * @author github-kloping
+ */
 @Data
 @Accessors(chain = true)
 public class BotList {

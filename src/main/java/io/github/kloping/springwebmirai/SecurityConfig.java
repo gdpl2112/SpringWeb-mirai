@@ -10,20 +10,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+/**
+ * @author github-kloping
+ */
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private static final Set<String> NotNeedAuthPages = new CopyOnWriteArraySet<>();
+    private static final Set<String> NOT_NEED_AUTH_PAGES = new CopyOnWriteArraySet<>();
 
     static {
-        NotNeedAuthPages.add("/login.html");
-        NotNeedAuthPages.add("/index.html");
-        NotNeedAuthPages.add("/js/*");
-        NotNeedAuthPages.add("/css/*");
-        NotNeedAuthPages.add("/index");
-        NotNeedAuthPages.add("/getBots");
-        NotNeedAuthPages.add("/plugins");
-        NotNeedAuthPages.add("/manager/terminal.html");
-        NotNeedAuthPages.add("/server_terminal");
+        NOT_NEED_AUTH_PAGES.add("/login.html");
+        NOT_NEED_AUTH_PAGES.add("/index.html");
+        NOT_NEED_AUTH_PAGES.add("/js/*");
+        NOT_NEED_AUTH_PAGES.add("/css/*");
+        NOT_NEED_AUTH_PAGES.add("/index");
+        NOT_NEED_AUTH_PAGES.add("/getBots");
+        NOT_NEED_AUTH_PAGES.add("/plugins");
+        NOT_NEED_AUTH_PAGES.add("/manager/terminal.html");
+        NOT_NEED_AUTH_PAGES.add("/server_terminal");
     }
 
     @Override
@@ -34,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureForwardUrl("/fail")
                 .and()
                 .authorizeRequests()
-                .antMatchers(NotNeedAuthPages.toArray(new String[0])).permitAll()
+                .antMatchers(NOT_NEED_AUTH_PAGES.toArray(new String[0])).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable();
@@ -42,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();// 使用不使用加密算法保持密码
+        return NoOpPasswordEncoder.getInstance();
 //        return new BCryptPasswordEncoder();
     }
 }

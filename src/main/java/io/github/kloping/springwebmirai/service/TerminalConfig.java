@@ -8,6 +8,9 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+/**
+ * @author github-kloping
+ */
 @Configuration
 public class TerminalConfig {
     @Data
@@ -18,9 +21,17 @@ public class TerminalConfig {
     }
 
     public static interface Receiver {
+        /**
+         * on console message
+         * @param line message line
+         * @param color It should be color
+         */
         void onMessage(String line,int color);
     }
 
-    public static final Set<Receiver> recs = new CopyOnWriteArraySet<>();
+    /**
+     * Console Message Receivers
+     */
+    public static final Set<Receiver> RECEIVERS = new CopyOnWriteArraySet<>();
 
 }

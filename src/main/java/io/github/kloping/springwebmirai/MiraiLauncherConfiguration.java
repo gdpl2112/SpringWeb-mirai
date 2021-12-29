@@ -17,8 +17,11 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static io.github.kloping.springwebmirai.service.TerminalConfig.recs;
+import static io.github.kloping.springwebmirai.service.TerminalConfig.RECEIVERS;
 
+/**
+ * @author github-kloping
+ */
 @Service
 public class MiraiLauncherConfiguration {
 
@@ -40,7 +43,9 @@ public class MiraiLauncherConfiguration {
     private void startLogin() {
         String env = environment.getProperty("spring.active");
         bots.getBots().forEach(e -> {
-            if (!e.getEnv().equals(env)) return;
+            if (!e.getEnv().equals(env)) {
+                return;
+            }
             BotConfiguration configuration = BotConfiguration.getDefault();
             configuration.setHeartbeatStrategy(BotConfiguration.HeartbeatStrategy.valueOf(e.getHeartbeatStrategy()));
             configuration.setProtocol(BotConfiguration.MiraiProtocol.valueOf(e.getProtocol()));
@@ -60,10 +65,10 @@ public class MiraiLauncherConfiguration {
             System.setOut(new PrintStream(ros.getOs()));
             String line = null;
             while ((line = ros.readLine()) != null) {
-                if (recs.isEmpty()) continue;
+                if (RECEIVERS.isEmpty()) continue;
                 else {
                     String finalLine = line;
-                    recs.forEach(e -> {
+                    RECEIVERS.forEach(e -> {
                         e.onMessage(finalLine, 0);
                     });
                 }
@@ -74,10 +79,10 @@ public class MiraiLauncherConfiguration {
             System.setErr(new PrintStream(ros.getOs()));
             String line = null;
             while ((line = ros.readLine()) != null) {
-                if (recs.isEmpty()) continue;
+                if (RECEIVERS.isEmpty()) continue;
                 else {
                     String finalLine = line;
-                    recs.forEach(e -> {
+                    RECEIVERS.forEach(e -> {
                         e.onMessage(finalLine, -1);
                     });
                 }
@@ -88,10 +93,15 @@ public class MiraiLauncherConfiguration {
     public void reLogin(long id) {
         String env = environment.getProperty("spring.active");
         bots.getBots().forEach(e -> {
-            if (e.getId() != id) return;
-            if (!e.getEnv().equals(env)) return;
-            if (Bot.getInstanceOrNull(e.getId()) != null)
+            if (e.getId() != id) {
+                return;
+            }
+            if (!e.getEnv().equals(env)) {
+                return;
+            }
+            if (Bot.getInstanceOrNull(e.getId()) != null) {
                 Bot.getInstance(e.getId()).close();
+            }
             BotConfiguration configuration = BotConfiguration.getDefault();
             configuration.setProtocol(BotConfiguration.MiraiProtocol.valueOf(e.getProtocol()));
             configuration.setHeartbeatStrategy(BotConfiguration.HeartbeatStrategy.valueOf(e.getHeartbeatStrategy()));

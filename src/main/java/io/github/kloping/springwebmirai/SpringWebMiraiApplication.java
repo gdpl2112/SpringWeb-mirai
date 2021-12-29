@@ -11,8 +11,12 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
+import javax.websocket.server.ServerEndpoint;
 import java.io.File;
 
+/**
+ * @author github-kloping
+ */
 @SpringBootApplication
 public class SpringWebMiraiApplication {
     public static void main(String[] args) {
@@ -42,9 +46,10 @@ public class SpringWebMiraiApplication {
         bots = FileInitializeValue.getValue(file.getAbsolutePath(), bots);
         return bots;
     }
+
     /**
-     * 这个bean会自动注册使用了@ServerEndpoint注解声明的对象
-     * 没有的话会报404
+     * This bean will automatically register objects declared with the {@link ServerEndpoint} annotation
+     * as 404 if they are not
      *
      * @return
      */

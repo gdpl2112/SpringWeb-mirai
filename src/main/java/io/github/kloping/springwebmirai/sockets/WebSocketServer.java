@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import static io.github.kloping.springwebmirai.service.TerminalConfig.recs;
+import static io.github.kloping.springwebmirai.service.TerminalConfig.RECEIVERS;
 
 @ServerEndpoint(value = "/server_terminal")
 @Component
@@ -51,14 +51,14 @@ public class WebSocketServer {
             }
         };
         receiverMap.put(session, receiver);
-        recs.add(receiver);
+        RECEIVERS.add(receiver);
 
     }
 
     @OnClose
     public void onClose() {
         subOnlineCount();
-        recs.remove(receiverMap.get(session));
+        RECEIVERS.remove(receiverMap.get(session));
         receiverMap.remove(session);
     }
 

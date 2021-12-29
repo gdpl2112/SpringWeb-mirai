@@ -10,6 +10,9 @@ import net.mamoe.mirai.contact.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author github-kloping
+ */
 @Service
 public class BotServiceImpl implements IBotService {
     @Override

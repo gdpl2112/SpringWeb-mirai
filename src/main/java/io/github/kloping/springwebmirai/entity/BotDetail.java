@@ -5,6 +5,9 @@ import lombok.experimental.Accessors;
 
 import java.util.*;
 
+/**
+ * @author github-kloping
+ */
 @Data
 @Accessors(chain = true)
 public class BotDetail {
