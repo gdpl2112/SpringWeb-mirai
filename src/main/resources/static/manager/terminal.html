@@ -8,10 +8,23 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
 </head>
 <body>
-
-<nav class="navbar navbar-expand-sm bg-light">
+<nav style="z-index: 9999; position: fixed" class="navbar navbar-expand-sm bg-light">
     <ul class="navbar-nav">
         <li class="nav-item">
             <a class="nav-link" href="../index.html">首页</a>
@@ -28,7 +41,38 @@
     </ul>
 </nav>
 <br>
-
+<center>
+    <button style="z-index: 9999; position: fixed" type="button" class="btn btn-primary" data-toggle="modal"
+            data-target="#exampleModalCenter">
+        执行命令
+    </button>
+</center>
+<div style="margin-top: 50px " class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dialog_c">执行</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group input-group-lg">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-lg">命令</span>
+                    </div>
+                    <textarea id="commandStr" placeholder="/help" class="form-control" aria-label="Large"
+                              aria-describedby="inputGroup-sizing-sm"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="exec_but" type="button" class="btn btn-primary" data-dismiss="modal"> 执行</button>
+                <button type="button" class="btn btn-secondary">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
 <ul class="list-group" id="main-list">
     <li class="list-group-item" :style="'color: '+e.color" v-for="e in data" v-text="e.text"></li>
 </ul>
@@ -54,7 +98,15 @@
             data: [{"color": "black", "text": "连接成功~"}]
         }, methods: {}
     });
-
+    $("#exec_but").click(function () {
+        let i0 = $("#commandStr");
+        let cs = i0.val()
+        if (cs === "") return;
+        axios.get("/run?arg=" + cs).then(function (response) {
+        }).catch(function (err) {
+            alert(err);
+        })
+    })
 </script>
 </body>
 </html>

@@ -5,6 +5,7 @@ import io.github.kloping.springwebmirai.entity.BotDetail;
 import io.github.kloping.springwebmirai.entity.BotList;
 import io.github.kloping.springwebmirai.service.IBotService;
 import net.mamoe.mirai.Bot;
+import net.mamoe.mirai.console.command.ConsoleCommandSender;
 import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +16,17 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BotServiceImpl implements IBotService {
+
     @Override
     public BotList getBotList() {
         BotList botList = new BotList();
-        for (long q : MiraiLauncherConfiguration.logins.keySet()) {
+        for (long q : MiraiLauncherConfiguration.LOGINS.keySet()) {
             BotList.BotInfo botInfo = new BotList.BotInfo()
                     .setSrc(getSrc(q)).setId(q);
             try {
                 Bot bot = Bot.getInstanceOrNull(q);
                 botInfo.setNickname(bot.getNick())
-                        .setLoginTime(MiraiLauncherConfiguration.logins.get(q))
+                        .setLoginTime(MiraiLauncherConfiguration.LOGINS.get(q))
                         .setOnline(bot.isOnline() ? 1 : 0);
             } catch (Exception e) {
             }
@@ -40,7 +42,7 @@ public class BotServiceImpl implements IBotService {
         botDetail.setId(id);
         botDetail.setSrc(bot.getAvatarUrl());
         botDetail.setNickname(bot.getNick());
-        botDetail.setLoginTime(MiraiLauncherConfiguration.logins.get(id));
+        botDetail.setLoginTime(MiraiLauncherConfiguration.LOGINS.get(id));
         for (Friend friend : bot.getFriends()) {
             botDetail.getFriends().add(
                     new BotList.BotInfo()
@@ -85,8 +87,9 @@ public class BotServiceImpl implements IBotService {
     @Override
     public BotList online(long id) {
         try {
-            if (Bot.getInstanceOrNull(id) == null)
+            if (Bot.getInstanceOrNull(id) == null) {
                 configuration.reLogin(id);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

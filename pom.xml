@@ -15,9 +15,29 @@
     <description>SpringWeb-mirai</description>
     <properties>
         <java.version>11</java.version>
-        <mirai.version>LATEST</mirai.version>
+        <mirai.version>2.9.1</mirai.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-core-all</artifactId>
+            <version>${mirai.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-core-jvm</artifactId>
+            <version>${mirai.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-console</artifactId>
+            <version>${mirai.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-console-terminal</artifactId>
+            <version>${mirai.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -41,33 +61,13 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.mamoe</groupId>
-            <artifactId>mirai-core-all</artifactId>
-            <version>${mirai.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.mamoe</groupId>
-            <artifactId>mirai-core-jvm</artifactId>
-            <version>${mirai.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.mamoe</groupId>
-            <artifactId>mirai-console</artifactId>
-            <version>${mirai.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.mamoe</groupId>
-            <artifactId>mirai-console-terminal</artifactId>
-            <version>${mirai.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
             <groupId>io.github.Kloping</groupId>
             <artifactId>JvUtils</artifactId>
-            <version>0.2.8</version>
+            <version>0.3.4</version>
         </dependency>
     </dependencies>
 

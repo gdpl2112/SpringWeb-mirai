@@ -3,10 +3,15 @@ package io.github.kloping.springwebmirai;
 import io.github.kloping.io.ReadIOUtils;
 import io.github.kloping.springwebmirai.entity.Bots;
 import io.github.kloping.springwebmirai.listeners.ListenerHost;
+import io.github.kloping.springwebmirai.service.SysCommandSender;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
+import net.mamoe.mirai.console.command.CommandExecuteResult;
+import net.mamoe.mirai.console.command.CommandManager;
+import net.mamoe.mirai.console.command.CommandSender;
 import net.mamoe.mirai.console.terminal.MiraiConsoleImplementationTerminal;
 import net.mamoe.mirai.console.terminal.MiraiConsoleTerminalLoader;
+import net.mamoe.mirai.message.data.PlainText;
 import net.mamoe.mirai.utils.BotConfiguration;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -38,7 +43,7 @@ public class MiraiLauncherConfiguration {
         new Thread(this::startLogin).start();
     }
 
-    public static final Map<Long, Long> logins = new ConcurrentHashMap<>();
+    public static final Map<Long, Long> LOGINS = new ConcurrentHashMap<>();
 
     private void startLogin() {
         String env = environment.getProperty("spring.active");
@@ -53,7 +58,7 @@ public class MiraiLauncherConfiguration {
             configuration.fileBasedDeviceInfo(e.getDeviceFile());
             Bot bot = BotFactory.INSTANCE.newBot(e.getId(), e.getPassword(), configuration);
             bot.login();
-            logins.put(e.getId(), System.currentTimeMillis());
+            LOGINS.put(e.getId(), System.currentTimeMillis());
             bot.getEventChannel().registerListenerHost(listener);
         });
         MiraiConsoleImplementationTerminal terminal = null;
@@ -61,12 +66,13 @@ public class MiraiLauncherConfiguration {
                 terminal = new MiraiConsoleImplementationTerminal(Paths.get("./botWorkDir/"))
         );
         new Thread(() -> {
-            ReadIOUtils.ReadOutputStream ros = ReadIOUtils.connectOs(System.out);
+            ReadIOUtils.ReadOutputStreamImpl ros = ReadIOUtils.connectOs(System.out);
             System.setOut(new PrintStream(ros.getOs()));
             String line = null;
             while ((line = ros.readLine()) != null) {
-                if (RECEIVERS.isEmpty()) continue;
-                else {
+                if (RECEIVERS.isEmpty()) {
+                    continue;
+                } else {
                     String finalLine = line;
                     RECEIVERS.forEach(e -> {
                         e.onMessage(finalLine, 0);
@@ -75,12 +81,13 @@ public class MiraiLauncherConfiguration {
             }
         }).start();
         new Thread(() -> {
-            ReadIOUtils.ReadOutputStream ros = ReadIOUtils.connectOs(System.err);
+            ReadIOUtils.ReadOutputStreamImpl ros = ReadIOUtils.connectOs(System.err);
             System.setErr(new PrintStream(ros.getOs()));
             String line = null;
             while ((line = ros.readLine()) != null) {
-                if (RECEIVERS.isEmpty()) continue;
-                else {
+                if (RECEIVERS.isEmpty()) {
+                    continue;
+                } else {
                     String finalLine = line;
                     RECEIVERS.forEach(e -> {
                         e.onMessage(finalLine, -1);
@@ -109,8 +116,21 @@ public class MiraiLauncherConfiguration {
             configuration.setCacheDir(new File(e.getCacheDir()));
             Bot bot = BotFactory.INSTANCE.newBot(e.getId(), e.getPassword(), configuration);
             bot.login();
-            logins.put(e.getId(), System.currentTimeMillis());
+            LOGINS.put(e.getId(), System.currentTimeMillis());
             bot.getEventChannel().registerListenerHost(listener);
         });
+    }
+
+    private static final CommandSender SENDER = SysCommandSender.INSTANCE;
+
+
+    public static String execute(String arg) {
+        CommandExecuteResult result = null;
+        result = CommandManager.INSTANCE.executeCommand(SENDER, new PlainText(arg), false);
+        return "已执行";
+    }
+
+    public static void main(String[] args) {
+        execute("/help");
     }
 }

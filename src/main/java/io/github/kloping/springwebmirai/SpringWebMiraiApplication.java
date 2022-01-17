@@ -29,7 +29,7 @@ public class SpringWebMiraiApplication {
 
     @Bean
     public String botConfName(Environment env) {
-        return env.equals("env") ? "botsConfiguration.json" : "test.json";
+        return "env".equals(env) ? "botsConfiguration.json" : "test.json";
     }
 
     @Bean

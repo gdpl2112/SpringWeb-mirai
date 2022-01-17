@@ -25,8 +25,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         NOT_NEED_AUTH_PAGES.add("/index");
         NOT_NEED_AUTH_PAGES.add("/getBots");
         NOT_NEED_AUTH_PAGES.add("/plugins");
-        NOT_NEED_AUTH_PAGES.add("/manager/terminal.html");
-        NOT_NEED_AUTH_PAGES.add("/server_terminal");
+//        NOT_NEED_AUTH_PAGES.add("/manager/terminal.html");
+//        NOT_NEED_AUTH_PAGES.add("/server_terminal");
     }
 
     @Override

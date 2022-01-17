@@ -22,7 +22,6 @@ import static io.github.kloping.springwebmirai.service.TerminalConfig.RECEIVERS;
 @Slf4j
 public class WebSocketServer {
     public WebSocketServer() {
-        System.out.println("====================");
     }
 
     private static int onlineCount = 0;
@@ -33,22 +32,29 @@ public class WebSocketServer {
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
-        addOnlineCount();
         TerminalConfig.Receiver receiver = new TerminalConfig.Receiver() {
             @Override
             public void onMessage(String line, int color) {
                 String t1 = line;
                 try {
-                    if (line.endsWith("\u001B["))
-                        t1 = line.substring(line.indexOf("m") + 1, line.lastIndexOf("\u001B["));
+                    if (line.startsWith("\u001B[32m")) {
+                        t1 = line.substring(line.indexOf("m") + 1, line.lastIndexOf("\u001B[m"));
+                        color = 1;
+                    } else if (line.startsWith("\u001B[")) {
+                        t1 = line.substring(line.indexOf("m") + 1, line.lastIndexOf("\u001B[m"));
+                        color = 0;
+                    }
                 } catch (Exception e) {
                 }
                 TerminalConfig.Line l = new TerminalConfig.Line()
                         .setText(t1);
-                if (color == -1)
+                if (color == -1) {
                     l.setColor("red");
-                else
+                } else if (color == 1) {
+                    l.setColor("green");
+                } else {
                     l.setColor("black");
+                }
 
                 sendMessage(JSON.toJSONString(l));
             }
@@ -60,7 +66,6 @@ public class WebSocketServer {
 
     @OnClose
     public void onClose() {
-        subOnlineCount();
         RECEIVERS.remove(receiverMap.get(session));
         receiverMap.remove(session);
     }
@@ -82,18 +87,6 @@ public class WebSocketServer {
         } catch (Exception e) {
             log.error("消息发送失败", e);
         }
-    }
-
-    public static synchronized int getOnlineCount() {
-        return onlineCount;
-    }
-
-    public static synchronized void addOnlineCount() {
-        WebSocketServer.onlineCount++;
-    }
-
-    public static synchronized void subOnlineCount() {
-        WebSocketServer.onlineCount--;
     }
 }
 
