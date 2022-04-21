@@ -3,4 +3,4 @@ server:
   address: localhost
 
 spring:
-  active: test
+  active: env
